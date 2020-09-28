@@ -5,9 +5,11 @@ import "./App.scss";
 import { useState, useCallback, useEffect, useLayoutEffect } from "react";
 import ls from "local-storage";
 import Button from "react-bootstrap/button";
+import { useTranslation } from 'react-i18next';
+import i18n from "./i18n"
 
 const QUALITIES = {
-  alert: "Alert",
+  alert: i18n.t("qualities.alert"),
   appreciative: "Appreciative",
   attentive: "Attentive",
   clear: "Clear",

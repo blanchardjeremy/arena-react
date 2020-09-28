@@ -9,7 +9,7 @@ i18n
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({
         keySeparator: false, // we do not use keys in form messages.welcome
-        fallbackLng: 'en',
+        fallbackLng: 'sv',
         detection: {
             caches: ['localStorage', 'cookie']
         },
@@ -22,5 +22,7 @@ i18n
             useSuspense: false
         }
     });
+
+console.log(i18n.t('qualities.alrt'));
 
 export default i18n;
