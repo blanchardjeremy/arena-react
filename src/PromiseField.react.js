@@ -9,24 +9,41 @@ var { DateTime } = require("luxon");
 export default function PromiseField(props: {
   test?: string,
 }): React.ReactElement {
-  const [promise, setPromise] = useState();
-  const [promiseDate, setPromiseDate] = useState();
+  const [currentPromise, setCurrentPromise] = useState();
+  const [currentPromiseDate, setCurrentPromiseDate] = useState();
+
+  const [priorPromise, setPriorPromise] = useState();
+  const [priorPromiseDate, setPriorPromiseDate] = useState();
 
   // Load current promise on initial load
   useLayoutEffect(() => {
-    const currentPromise = ls.get("currentPromise");
-    setPromise(currentPromise);
-    const currentPromiseDate = DateTime.fromISO(ls.get("currentPromiseDate"));
-    setPromiseDate(currentPromiseDate);
+    setCurrentPromise(ls.get("currentPromise"));
+    setCurrentPromiseDate(DateTime.fromISO(ls.get("currentPromiseDate")));
+
+    setPriorPromise(ls.get("priorPromise"));
+    setPriorPromiseDate(DateTime.fromISO(ls.get("priorPromiseDate")));
   }, []);
 
-  function updatePromise(updatedPromise) {
-    setPromise(updatedPromise);
-    ls.set("currentPromise", updatedPromise);
+  function updateCurrentPromise(promise) {
+    setCurrentPromise(promise);
+    ls.set("currentPromise", promise);
 
-    const curDate = DateTime.local();
-    setPromiseDate(curDate);
-    ls.set("currentPromiseDate", curDate.toString());
+    const date = DateTime.local();
+    setCurrentPromiseDate(date);
+    ls.set("currentPromiseDate", date.toString());
+  }
+
+  function updatePriorPromise(promise, date) {
+    setPriorPromise(promise);
+    ls.set("priorPromise", promise);
+
+    setPriorPromiseDate(date);
+    ls.set("priorPromiseDate", date.toString());
+  }
+
+  function bumpPromise() {
+    updatePriorPromise(currentPromise, currentPromiseDate.minus({ days: 3 }));
+    updateCurrentPromise("");
   }
 
   return (
@@ -37,33 +54,45 @@ export default function PromiseField(props: {
           variant="secondary"
           size="sm"
           className="float-right"
-          onClick={(e) => updatePromise("")}
+          onClick={(e) => bumpPromise()}
         >
-          Clear Promise
+          Set New Promise
         </Button>
       </h4>
       <Form.Group controlId="promise-field">
-        <Form.Label>Enter your promise for today</Form.Label>
+        <Form.Label>
+          Today I will bring clarify, focus, ease and grace to ___________ by
+          setting the Coaching Arena beforehand.
+        </Form.Label>
         <Form.Control
           type="promise"
           placeholder="Your promise for today"
-          onChange={(e) => updatePromise(e.target.value)}
-          value={promise}
+          onChange={(e) => updateCurrentPromise(e.target.value)}
+          value={currentPromise}
         />
+        <Form.Text className="text-muted"></Form.Text>
         <Form.Text className="text-muted">
-          Today I will bring clarify, focus, ease and grace to ___________ by
-          setting the Coaching Arena beforehand.
+          <em>
+            Promise set{" "}
+            {!currentPromiseDate
+              ? null
+              : currentPromiseDate.toRelativeCalendar()}
+          </em>
         </Form.Text>
       </Form.Group>
 
-      <h5>Recent promise:</h5>
-      <ul>
-        <li>
-          Date: {!promiseDate ? null : promiseDate.toRelativeCalendar()}
-          <br />
-          Promise: {promise}
-        </li>
-      </ul>
+      {!priorPromiseDate ? null : (
+        <>
+          <h5>Prior promise:</h5>
+          <p>
+            <strong style={{ textTransform: "capitalize" }}>
+              {priorPromiseDate.toRelativeCalendar()} (
+              {priorPromiseDate.toFormat("cccc")}):
+            </strong>{" "}
+            {priorPromise}
+          </p>
+        </>
+      )}
     </>
   );
 }
