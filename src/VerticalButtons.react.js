@@ -11,13 +11,7 @@ type Props = {|
 |};
 
 function VerticalButtons({ words, fillLength }: Props): React.MixedElement {
-  // const fillerArray = [...Array(fillLength - words.length)].map((_) => "(select from above)");
-  // const wordsWithFill = words.concat(fillerArray);
   const wordsWithFill = words;
-
-  // console.log({ words, fillerArray });
-
-  console.log({ fillLength, wordsLength: words.length });
 
   return (
     <ul className="verticalButtons-list">

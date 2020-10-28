@@ -10,6 +10,7 @@ import "./App.scss";
 import ls from "local-storage";
 import Button from "react-bootstrap/button";
 import VerticalButtons from "./VerticalButtons.react";
+import PromiseField from "./PromiseField.react";
 
 const QUALITIES: $ReadOnlyArray<string> = [
   "Alert",
@@ -57,7 +58,6 @@ function getArenaType() {
 }
 
 const arenaType = getArenaType();
-// console.log(questionType);
 
 const activeQuestions = QUESTIONS[arenaType];
 
@@ -110,6 +110,7 @@ function App(): React$MixedElement {
               variant="warning"
               size="sm"
               id="clear_qualities"
+              className="float-right"
               onClick={() => setActiveQualities([])}
             >
               Reset
@@ -166,10 +167,14 @@ function App(): React$MixedElement {
           </ol>
         </div>
 
+        <div id="promise-container">
+          <PromiseField />
+        </div>
+
         <hr />
         <p>
           <em>
-            SetTheArena.com: <a href="/">Main Arena</a> • 
+            SetTheArena.com: <a href="/">Main Arena</a> •{" "}
             <a href="/client">Client Arena</a>
           </em>
         </p>
