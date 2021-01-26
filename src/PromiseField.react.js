@@ -30,9 +30,15 @@ export default function PromiseField(props: {
     setCurrentPromise(promise);
     ls.set("currentPromise", promise);
 
-    const date = DateTime.local();
-    setCurrentPromiseDate(date);
-    ls.set("currentPromiseDate", date.toString());
+    if (promise === "") {
+      // Unset the date if there's no promise currently
+      setCurrentPromiseDate(null);
+      ls.set("currentPromiseDate", null);
+    } else {
+      const date = DateTime.local();
+      setCurrentPromiseDate(date);
+      ls.set("currentPromiseDate", date.toString());
+    }
   }
 
   function updatePriorPromise(promise, date) {
@@ -49,7 +55,6 @@ export default function PromiseField(props: {
   }
 
   function checkForPromiseBump() {
-    debugger;
     if (currentPromiseDate) {
       if (DateTime.local().diff(currentPromiseDate).hours > 20) {
         bumpPromise();
@@ -60,7 +65,7 @@ export default function PromiseField(props: {
   return (
     <>
       <h4>
-        Promise
+        Setting the Arena with a Buddy
         <Button
           variant="secondary"
           size="sm"
@@ -70,6 +75,22 @@ export default function PromiseField(props: {
           Set New Promise
         </Button>
       </h4>
+
+      {!priorPromiseDate || !priorPromiseDate.isValid ? null : (
+        <>
+          <Form.Group controlId="promise-field">
+            <Form.Label>
+              <span class="fill-in-the-blank capitalize">
+                {priorPromiseDate.toRelativeCalendar()} (
+                {priorPromiseDate.toFormat("cccc")})
+              </span>
+              , I said I would sent the arena before{" "}
+              <span class="fill-in-the-blank">{priorPromise}</span> and I{" "}
+              <strong>[DID / DID NOT]</strong> do what I said I would do.
+            </Form.Label>
+          </Form.Group>
+        </>
+      )}
       <Form.Group controlId="promise-field">
         <Form.Label>
           Today I will bring clarify, focus, ease and grace to ___________ by
@@ -77,32 +98,20 @@ export default function PromiseField(props: {
         </Form.Label>
         <Form.Control
           type="promise"
-          placeholder="Your promise for today"
+          placeholder="calling my doctor"
           onChange={(e) => updateCurrentPromise(e.target.value)}
           value={currentPromise}
         />
         <Form.Text className="text-muted">
           <em>
-            Promise set{" "}
-            {!currentPromiseDate
-              ? null
-              : currentPromiseDate.toRelativeCalendar()}
+            {!currentPromiseDate || !currentPromiseDate.isValid ? null : (
+              <>
+                You set this promise {currentPromiseDate.toRelativeCalendar()}
+              </>
+            )}
           </em>
         </Form.Text>
       </Form.Group>
-
-      {!priorPromiseDate ? null : (
-        <>
-          <h5>Prior promise:</h5>
-          <p>
-            <strong style={{ textTransform: "capitalize" }}>
-              {priorPromiseDate.toRelativeCalendar()} (
-              {priorPromiseDate.toFormat("cccc")}):
-            </strong>{" "}
-            {priorPromise}
-          </p>
-        </>
-      )}
     </>
   );
 }
