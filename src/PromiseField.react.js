@@ -22,6 +22,8 @@ export default function PromiseField(props: {
 
     setPriorPromise(ls.get("priorPromise"));
     setPriorPromiseDate(DateTime.fromISO(ls.get("priorPromiseDate")));
+
+    checkForPromiseBump();
   }, []);
 
   function updateCurrentPromise(promise) {
@@ -42,8 +44,17 @@ export default function PromiseField(props: {
   }
 
   function bumpPromise() {
-    updatePriorPromise(currentPromise, currentPromiseDate.minus({ days: 3 }));
+    updatePriorPromise(currentPromise, currentPromiseDate);
     updateCurrentPromise("");
+  }
+
+  function checkForPromiseBump() {
+    debugger;
+    if (currentPromiseDate) {
+      if (DateTime.local().diff(currentPromiseDate).hours > 20) {
+        bumpPromise();
+      }
+    }
   }
 
   return (
@@ -70,7 +81,6 @@ export default function PromiseField(props: {
           onChange={(e) => updateCurrentPromise(e.target.value)}
           value={currentPromise}
         />
-        <Form.Text className="text-muted"></Form.Text>
         <Form.Text className="text-muted">
           <em>
             Promise set{" "}
