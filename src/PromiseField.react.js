@@ -98,7 +98,7 @@ export default function PromiseField(props: {
         </Form.Label>
         <Form.Control
           type="promise"
-          placeholder="calling my doctor"
+          placeholder="example: calling my doctor"
           onChange={(e) => updateCurrentPromise(e.target.value)}
           value={currentPromise}
         />
