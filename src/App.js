@@ -10,6 +10,7 @@ import "./App.scss";
 import ls from "local-storage";
 import Button from "react-bootstrap/button";
 import VerticalButtons from "./VerticalButtons.react";
+import PromiseField from "./PromiseField.react";
 
 const QUALITIES: $ReadOnlyArray<string> = [
   "Alert",
@@ -39,16 +40,21 @@ const QUALITIES: $ReadOnlyArray<string> = [
 
 const QUESTIONS = {
   full: {
-    1: "Who am I willing to be in order to produce an extraordinary result out of this interaction?",
+    1:
+      "Who am I willing to be in order to produce an extraordinary result out of this interaction?",
     2: "Am I willing to systematically dismantle my structure of knowing?",
     3: "Am I willing to be a demand for coaching?",
     4: "Am I willing to guarantee that whoever coaches me will be successful?",
   },
   client: {
-    1: "There are some qualities I am willing to demonstrate in this interaction so we can both make sure we have an extraordinary result out of our session together:",
-    2: "During the session am I willing to set aside the opinions, beliefs, and thoughts that may be getting in the way of seeing something clearly?",
-    3: "Am I willing to be open-minded and fully engaged in order to receive maximum benefit from this time together?",
-    4: "The result of coaching in this model is always action. Am I willing to see the most authentic action to take? If I am the person being coached, am I willing to take it?",
+    1:
+      "There are some qualities I am willing to demonstrate in this interaction so we can both make sure we have an extraordinary result out of our session together:",
+    2:
+      "During the session am I willing to set aside the opinions, beliefs, and thoughts that may be getting in the way of seeing something clearly?",
+    3:
+      "Am I willing to be open-minded and fully engaged in order to receive maximum benefit from this time together?",
+    4:
+      "The result of coaching in this model is always action. Am I willing to see the most authentic action to take? If I am the person being coached, am I willing to take it?",
   },
 };
 
@@ -57,7 +63,6 @@ function getArenaType() {
 }
 
 const arenaType = getArenaType();
-// console.log(questionType);
 
 const activeQuestions = QUESTIONS[arenaType];
 
@@ -110,6 +115,7 @@ function App(): React$MixedElement {
               variant="warning"
               size="sm"
               id="clear_qualities"
+              className="float-right"
               onClick={() => setActiveQualities([])}
             >
               Reset
@@ -166,10 +172,14 @@ function App(): React$MixedElement {
           </ol>
         </div>
 
+        <div id="promise-container">
+          <PromiseField />
+        </div>
+
         <hr />
         <p>
           <em>
-            SetTheArena.com: <a href="/">Main Arena</a> • 
+            SetTheArena.com: <a href="/">Main Arena</a> •{" "}
             <a href="/client">Client Arena</a>
           </em>
         </p>

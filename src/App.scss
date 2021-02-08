@@ -47,10 +47,17 @@ body {
     display: inline-block;
     margin: 7px 5px;
 
-    $mynewcolor:#f9f9f9;
+    $mynewcolor: #f9f9f9;
 
     .btn-light {
-        @include button-variant($mynewcolor, darken($mynewcolor, 7.5%), darken($mynewcolor, 10%), lighten($mynewcolor,5%), lighten($mynewcolor, 10%), darken($mynewcolor,30%));
+      @include button-variant(
+        $mynewcolor,
+        darken($mynewcolor, 7.5%),
+        darken($mynewcolor, 10%),
+        lighten($mynewcolor, 5%),
+        lighten($mynewcolor, 10%),
+        darken($mynewcolor, 30%)
+      );
     }
   }
 }
@@ -59,7 +66,8 @@ body {
   font-weight: bold;
   padding-inline-start: 25px;
   // Make all sub elements not bold
-  em, ul {
+  em,
+  ul {
     font-weight: normal;
   }
 }
@@ -70,7 +78,6 @@ body {
   .alert {
     display: inline-block;
   }
-
 }
 
 .footer {
