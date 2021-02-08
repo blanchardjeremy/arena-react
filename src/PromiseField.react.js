@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState, useCallback } from "react";
 import "./PromiseField.react.scss";
 import { Button, Form } from "react-bootstrap";
 import ls from "local-storage";
@@ -14,17 +14,6 @@ export default function PromiseField(props: {
 
   const [priorPromise, setPriorPromise] = useState();
   const [priorPromiseDate, setPriorPromiseDate] = useState();
-
-  // Load current promise on initial load
-  useLayoutEffect(() => {
-    setCurrentPromise(ls.get("currentPromise"));
-    setCurrentPromiseDate(DateTime.fromISO(ls.get("currentPromiseDate")));
-
-    setPriorPromise(ls.get("priorPromise"));
-    setPriorPromiseDate(DateTime.fromISO(ls.get("priorPromiseDate")));
-
-    checkForPromiseBump();
-  }, []);
 
   function updateCurrentPromise(promise) {
     setCurrentPromise(promise);
@@ -49,18 +38,25 @@ export default function PromiseField(props: {
     ls.set("priorPromiseDate", date.toString());
   }
 
-  function bumpPromise() {
+  const memoizedBumpPromise = useCallback(() => {
     updatePriorPromise(currentPromise, currentPromiseDate);
     updateCurrentPromise("");
-  }
+  }, [currentPromise, currentPromiseDate]);
 
-  function checkForPromiseBump() {
+  // Load current promise on initial load
+  useLayoutEffect(() => {
+    setCurrentPromise(ls.get("currentPromise"));
+    setCurrentPromiseDate(DateTime.fromISO(ls.get("currentPromiseDate")));
+
+    setPriorPromise(ls.get("priorPromise"));
+    setPriorPromiseDate(DateTime.fromISO(ls.get("priorPromiseDate")));
+
     if (currentPromiseDate) {
       if (DateTime.local().diff(currentPromiseDate).hours > 20) {
-        bumpPromise();
+        memoizedBumpPromise();
       }
     }
-  }
+  }, [currentPromiseDate, memoizedBumpPromise]);
 
   return (
     <>
@@ -70,7 +66,7 @@ export default function PromiseField(props: {
           variant="secondary"
           size="sm"
           className="float-right"
-          onClick={(e) => bumpPromise()}
+          onClick={(e) => memoizedBumpPromise()}
         >
           Set New Promise
         </Button>
