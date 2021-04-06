@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useLayoutEffect, useState, useCallback } from "react";
+import React, { useLayoutEffect, useState, useCallback, useRef } from "react";
 import "./PromiseField.react.scss";
 import { Button, Form } from "react-bootstrap";
 import ls from "local-storage";
@@ -43,18 +43,23 @@ export default function PromiseField(props: {
     updateCurrentPromise("");
   }, [currentPromise, currentPromiseDate]);
 
-  // Load current promise on initial load
+  const didSetPromiseFromLocalStorage = useRef<boolean>(false);
+
   useLayoutEffect(() => {
-    setCurrentPromise(ls.get("currentPromise"));
-    setCurrentPromiseDate(DateTime.fromISO(ls.get("currentPromiseDate")));
+    // Load current promise on initial load
+    if (!didSetPromiseFromLocalStorage.current) {
+      setCurrentPromise(ls.get("currentPromise"));
+      setCurrentPromiseDate(DateTime.fromISO(ls.get("currentPromiseDate")));
 
-    setPriorPromise(ls.get("priorPromise"));
-    setPriorPromiseDate(DateTime.fromISO(ls.get("priorPromiseDate")));
+      setPriorPromise(ls.get("priorPromise"));
+      setPriorPromiseDate(DateTime.fromISO(ls.get("priorPromiseDate")));
 
-    if (currentPromiseDate) {
-      if (DateTime.local().diff(currentPromiseDate).hours > 20) {
-        memoizedBumpPromise();
+      if (currentPromiseDate) {
+        if (DateTime.local().diff(currentPromiseDate).hours > 20) {
+          memoizedBumpPromise();
+        }
       }
+      didSetPromiseFromLocalStorage.current = true;
     }
   }, [currentPromiseDate, memoizedBumpPromise]);
 
